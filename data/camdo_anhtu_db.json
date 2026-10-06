@@ -1,0 +1,156 @@
+{
+  "users": [
+    {
+      "id": "USR-ADMIN",
+      "username": "admin",
+      "fullName": "Chủ Tiệm Anh Tú",
+      "role": "admin",
+      "passwordHash": "9de025eae9d97f48ccd67e7a15f9e53e33e19fb2b93db93c1a1a0f823dc0e326",
+      "isLocked": false,
+      "permissions": {
+        "canAddCustomer": true,
+        "canCreateContract": true,
+        "canEditContract": true,
+        "canDeleteContract": true,
+        "canCollectInterest": true,
+        "canRedeem": true,
+        "canLiquidate": true,
+        "canManageWarehouse": true,
+        "canManageCashflow": true,
+        "canViewReports": true,
+        "canDeleteData": true
+      },
+      "createdAt": "2026-10-06T13:54:37.585Z",
+      "updatedAt": "2026-10-06T13:54:37.585Z"
+    }
+  ],
+  "customers": [],
+  "contracts": [
+    {
+      "code": "HD-000101",
+      "customerId": "KH-1001",
+      "customerName": "Nguyễn Văn Tuấn",
+      "customerPhone": "0912 345 678",
+      "customerIdCard": "056096001234",
+      "customerAddress": "188/31/8 Thống Nhất, Phan Rang",
+      "loanAmount": 35000000,
+      "startDate": "2026-09-21",
+      "dueDate": "2026-10-21",
+      "interestRate": 3,
+      "warehouseLocation": "Khu xe máy",
+      "notes": "Xe chính chủ, kèm 2 smartkey và cà vẹt gốc",
+      "id": "CTR-1791294901570",
+      "totalInterestPaid": 0,
+      "status": "active",
+      "createdAt": "2026-10-06T13:55:01.570Z",
+      "updatedAt": "2026-10-06T13:55:01.570Z",
+      "assetId": "AST-1791294901570"
+    }
+  ],
+  "assets": [
+    {
+      "name": "Honda SH 150i ABS 2023",
+      "type": "motorbike",
+      "details": {
+        "brand": "Honda",
+        "model": "SH 150i ABS",
+        "year": "2023",
+        "color": "Trắng Đen",
+        "licensePlate": "85B1-899.99",
+        "frameNumber": "RLHJF5112P100234",
+        "engineNumber": "JF51E-0123456",
+        "odo": "8.500 km"
+      },
+      "condition": "Xe zin 99%, dàn áo dán keo trong, máy êm",
+      "estimatedValue": 85000000,
+      "warehouseLocation": "Khu xe máy",
+      "id": "AST-1791294901570",
+      "contractId": "CTR-1791294901570",
+      "customerId": "KH-1001",
+      "status": "in_pawn",
+      "createdAt": "2026-10-06T13:55:01.570Z",
+      "updatedAt": "2026-10-06T13:55:01.570Z"
+    }
+  ],
+  "images": [
+    {
+      "id": "IMG-1791294901570-382",
+      "contractId": "CTR-1791294901570",
+      "assetId": "AST-1791294901570",
+      "dataUrl": "/banner.jpg",
+      "caption": "Ảnh tổng thể xe",
+      "uploadedBy": "Chủ Tiệm Anh Tú",
+      "createdAt": "2026-10-06T13:55:01.570Z"
+    }
+  ],
+  "payments": [],
+  "extensions": [],
+  "liquidations": [],
+  "transactions": [
+    {
+      "id": "PC-1791294901570",
+      "code": "PC-901570",
+      "type": "expense",
+      "category": "loan_disbursement",
+      "amount": 35000000,
+      "paymentMethod": "cash",
+      "referenceContractId": "CTR-1791294901570",
+      "referenceContractCode": "HD-000101",
+      "staffName": "Chủ Tiệm Anh Tú",
+      "date": "2026-09-21",
+      "note": "Chi tiền cầm tài sản cho hợp đồng HD-000101 - Nguyễn Văn Tuấn",
+      "createdAt": "2026-10-06T13:55:01.570Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "LOG-1791294901579-835",
+      "userId": "USR-ADMIN",
+      "userName": "Chủ Tiệm Anh Tú",
+      "action": "Tạo hợp đồng cầm đồ",
+      "entity": "contract",
+      "entityId": "CTR-1791294901570",
+      "details": "Tạo hợp đồng HD-000101 (Nguyễn Văn Tuấn) - Tiền cầm: 35.000.000đ - Lãi suất: 3%/tháng",
+      "timestamp": "2026-10-06T13:55:01.579Z"
+    },
+    {
+      "id": "LOG-INIT",
+      "userId": "USR-ADMIN",
+      "userName": "Hệ thống",
+      "action": "Khởi tạo hệ thống",
+      "entity": "settings",
+      "entityId": "SYS",
+      "details": "Khởi tạo cơ sở dữ liệu bền vững Cầm đồ Anh Tú",
+      "timestamp": "2026-10-06T13:54:37.585Z"
+    }
+  ],
+  "settings": {
+    "shopName": "CẦM ĐỒ ANH TÚ",
+    "logoUrl": "/logo.jpg",
+    "bannerUrl": "/banner.jpg",
+    "phone": "0969 905 234",
+    "address": "188/31/8 Thống Nhất, Phan Rang, Khánh Hoà",
+    "bankName": "MB Bank (Quân Đội)",
+    "bankAccountNumber": "0969905234",
+    "bankAccountName": "CẦM ĐỒ ANH TÚ",
+    "defaultInterestRate": 3,
+    "interestCalculationRules": {
+      "halfMonthDaysThreshold": 15,
+      "fullMonthDaysThreshold": 15,
+      "nextMonthsRule": "by_month"
+    },
+    "warehouseLocations": [
+      "Kho chính",
+      "Kho 1",
+      "Kho 2",
+      "Khu xe máy",
+      "Khu ô tô",
+      "Khu điện thoại",
+      "Tủ laptop",
+      "Kho thanh lý"
+    ],
+    "isDemoModeActive": false,
+    "updatedAt": "2026-10-06T13:54:37.584Z",
+    "lastBackupTime": "2026-10-06T13:54:37.586Z"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Cầm Đồ Anh Tú - Quản Lý Tiệm Cầm Đồ",
+  "description": "Hệ thống quản lý tiệm Cầm đồ Anh Tú chuyên nghiệp, bảo mật: Hợp đồng, tài sản, thu lãi tự động, kho hàng, thu chi và báo cáo.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
