@@ -49,6 +49,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customerError, setCustomerError] = useState<string | null>(null);
 
   const canDelete = currentUser.role === 'admin' || currentUser.permissions.canDeleteData;
 
@@ -59,6 +60,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
     setIdCard('');
     setAddress('');
     setNotes('');
+    setCustomerError(null);
     setIsModalOpen(true);
   };
 
@@ -70,13 +72,15 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
     setIdCard(c.idCard);
     setAddress(c.address);
     setNotes(c.notes || '');
+    setCustomerError(null);
     setIsModalOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCustomerError(null);
     if (!fullName.trim() || !phone.trim()) {
-      alert('Vui lòng nhập họ tên và số điện thoại.');
+      setCustomerError('Vui lòng nhập họ tên và số điện thoại.');
       return;
     }
     setIsSubmitting(true);
@@ -100,7 +104,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
       }
       setIsModalOpen(false);
     } catch (err: any) {
-      alert('Lỗi lưu khách hàng: ' + err.message);
+      setCustomerError('Lỗi lưu khách hàng: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -363,6 +367,11 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+              {customerError && (
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                  {customerError}
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-medium text-zinc-300 mb-1">
                   Họ và tên khách <span className="text-rose-500">*</span>

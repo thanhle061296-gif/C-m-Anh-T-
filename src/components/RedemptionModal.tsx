@@ -42,6 +42,7 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'bank_transfer'>('cash');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('Khách thanh toán đủ tiền gốc + lãi để chuộc tài sản về');
+  const [error, setError] = useState<string | null>(null);
   const [isConfirmStep, setIsConfirmStep] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,8 +54,9 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({
 
   const handleProceed = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     if (totalAmount <= 0) {
-      alert('Tổng tiền chuộc phải lớn hơn 0.');
+      setError('Tổng tiền chuộc phải lớn hơn 0.');
       return;
     }
     setIsConfirmStep(true);
@@ -62,6 +64,7 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({
 
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
+    setError(null);
     try {
       await onConfirm({
         contractId: contract.id,
@@ -74,7 +77,7 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({
       setIsConfirmStep(false);
       onClose();
     } catch (err: any) {
-      alert('Lỗi chuộc tài sản: ' + err.message);
+      setError('Lỗi chuộc tài sản: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -106,6 +109,11 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({
 
         {!isConfirmStep ? (
           <form onSubmit={handleProceed} className="p-6 space-y-5">
+            {error && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                {error}
+              </div>
+            )}
             {/* Asset Notice */}
             <div className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs flex items-center justify-between">
               <div>

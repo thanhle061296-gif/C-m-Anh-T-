@@ -43,13 +43,15 @@ export const CollectInterestModal: React.FC<CollectInterestModalProps> = ({
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [periodNote, setPeriodNote] = useState(`Thu lãi kỳ tháng (${calc.periodsCount} kỳ)`);
   const [note, setNote] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [isConfirmStep, setIsConfirmStep] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleProceed = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     if (amount <= 0) {
-      alert('Số tiền thu phải lớn hơn 0.');
+      setError('Số tiền thu phải lớn hơn 0.');
       return;
     }
     setIsConfirmStep(true);
@@ -57,6 +59,7 @@ export const CollectInterestModal: React.FC<CollectInterestModalProps> = ({
 
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
+    setError(null);
     try {
       await onConfirm({
         contractId: contract.id,
@@ -69,7 +72,7 @@ export const CollectInterestModal: React.FC<CollectInterestModalProps> = ({
       setIsConfirmStep(false);
       onClose();
     } catch (err: any) {
-      alert('Lỗi thu lãi: ' + err.message);
+      setError('Lỗi thu lãi: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -102,6 +105,11 @@ export const CollectInterestModal: React.FC<CollectInterestModalProps> = ({
         {/* Body */}
         {!isConfirmStep ? (
           <form onSubmit={handleProceed} className="p-6 space-y-5">
+            {error && (
+              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                {error}
+              </div>
+            )}
             {/* Automatic interest breakdown (Spec #9 & #11) */}
             <div className="rounded-2xl bg-zinc-950 p-4 border border-zinc-800 space-y-2 text-xs">
               <div className="flex justify-between text-zinc-400">

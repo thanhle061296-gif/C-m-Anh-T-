@@ -43,6 +43,7 @@ export const LiquidationModal: React.FC<LiquidationModalProps> = ({
   const [buyerPhone, setBuyerPhone] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('Khách quá hạn lâu ngày không đóng lãi, tiến hành thanh lý thu hồi vốn');
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Profit / Loss calculation
@@ -51,8 +52,9 @@ export const LiquidationModal: React.FC<LiquidationModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     if (liquidationPrice <= 0) {
-      alert('Giá thanh lý phải lớn hơn 0.');
+      setError('Giá thanh lý phải lớn hơn 0.');
       return;
     }
     setIsSubmitting(true);
@@ -68,7 +70,7 @@ export const LiquidationModal: React.FC<LiquidationModalProps> = ({
       });
       onClose();
     } catch (err: any) {
-      alert('Lỗi thanh lý tài sản: ' + err.message);
+      setError('Lỗi thanh lý tài sản: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -99,6 +101,11 @@ export const LiquidationModal: React.FC<LiquidationModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {error && (
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+              {error}
+            </div>
+          )}
           {/* Warning */}
           <div className="p-3.5 rounded-xl bg-orange-950/20 border border-orange-500/30 text-xs text-orange-200 flex items-start gap-2.5">
             <AlertTriangle className="h-5 w-5 text-orange-400 shrink-0 mt-0.5" />

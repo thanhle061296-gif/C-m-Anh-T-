@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -8,8 +9,18 @@ import { DatabaseState, User, SystemSettings, Customer, Contract, Asset, Payment
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+
+// Parse port from command line argument (e.g., --port 3000) or env
+let PORT = 3000;
+const portArgIndex = process.argv.indexOf('--port');
+if (portArgIndex !== -1 && process.argv[portArgIndex + 1]) {
+  PORT = parseInt(process.argv[portArgIndex + 1], 10);
+} else if (process.env.PORT) {
+  PORT = parseInt(process.env.PORT, 10);
+}
+
 const isProduction = process.env.NODE_ENV === 'production';
+const httpServer = http.createServer(app);
 
 // Increase payload limit for contract asset images (Base64)
 app.use(express.json({ limit: '50mb' }));
@@ -1178,9 +1189,14 @@ app.use(express.static(path.resolve(process.cwd(), 'public')));
 async function setupServer() {
   if (!isProduction) {
     // Development mode: attach Vite middleware
+    const isHmrDisabled = process.env.DISABLE_HMR === 'true';
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: isHmrDisabled ? false : { server: httpServer },
+        watch: isHmrDisabled ? null : {},
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -1195,7 +1211,7 @@ async function setupServer() {
     }
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running at http://0.0.0.0:${PORT}`);
   });
 }

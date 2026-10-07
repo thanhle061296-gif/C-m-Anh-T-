@@ -109,6 +109,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Initialize or populate form
   useEffect(() => {
@@ -211,16 +212,17 @@ export const ContractModal: React.FC<ContractModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
     if (!customerName.trim() || !customerPhone.trim()) {
-      alert('Vui lòng nhập Tên và Số điện thoại khách hàng.');
+      setFormError('Vui lòng nhập Tên và Số điện thoại khách hàng.');
       return;
     }
     if (!assetName.trim()) {
-      alert('Vui lòng nhập Tên tài sản.');
+      setFormError('Vui lòng nhập Tên tài sản.');
       return;
     }
     if (loanAmount <= 0) {
-      alert('Số tiền cầm phải lớn hơn 0.');
+      setFormError('Số tiền cầm phải lớn hơn 0.');
       return;
     }
 
@@ -281,7 +283,7 @@ export const ContractModal: React.FC<ContractModalProps> = ({
       await onSubmit(contractPayload, assetPayload, images);
       onClose();
     } catch (err: any) {
-      alert('Lỗi lưu hợp đồng: ' + err.message);
+      setFormError('Lỗi lưu hợp đồng: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -317,6 +319,13 @@ export const ContractModal: React.FC<ContractModalProps> = ({
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+          {formError && (
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center justify-between">
+              <span>{formError}</span>
+              <button type="button" onClick={() => setFormError(null)} className="text-zinc-400 hover:text-white ml-2">×</button>
+            </div>
+          )}
+
           {/* Section 1: Customer Info */}
           <div className="rounded-2xl bg-zinc-950/60 border border-zinc-800/80 p-4 sm:p-5 space-y-4">
             <div className="flex items-center justify-between">

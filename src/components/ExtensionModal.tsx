@@ -43,6 +43,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
   });
   const [interestCollected, setInterestCollected] = useState<number>(calc.currentPeriodInterest);
   const [note, setNote] = useState('Khách đóng tiền lãi và xin gia hạn thêm');
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSelectDays = (days: number) => {
@@ -55,6 +56,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
     try {
       await onConfirm({
         contractId: contract.id,
@@ -65,7 +67,7 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
       });
       onClose();
     } catch (err: any) {
-      alert('Lỗi gia hạn: ' + err.message);
+      setError('Lỗi gia hạn: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -96,6 +98,11 @@ export const ExtensionModal: React.FC<ExtensionModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {error && (
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+              {error}
+            </div>
+          )}
           <div className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2 text-xs">
             <div className="flex justify-between">
               <span className="text-zinc-400">Ngày đến hạn hiện tại:</span>

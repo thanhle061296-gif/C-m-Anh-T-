@@ -39,6 +39,7 @@ export const CashflowView: React.FC<CashflowViewProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'bank_transfer'>('cash');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const canDelete = currentUser.role === 'admin' || currentUser.permissions.canDeleteData;
@@ -70,13 +71,15 @@ export const CashflowView: React.FC<CashflowViewProps> = ({
     setCategory(type === 'income' ? 'other_income' : 'operating_cost');
     setAmount(1000000);
     setNote('');
+    setFormError(null);
     setIsModalOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
     if (amount <= 0 || !note.trim()) {
-      alert('Vui lòng nhập số tiền và nội dung.');
+      setFormError('Vui lòng nhập số tiền và nội dung.');
       return;
     }
     setIsSubmitting(true);
@@ -91,7 +94,7 @@ export const CashflowView: React.FC<CashflowViewProps> = ({
       });
       setIsModalOpen(false);
     } catch (err: any) {
-      alert('Lỗi tạo phiếu: ' + err.message);
+      setFormError('Lỗi tạo phiếu: ' + (err.message || 'Thao tác không thành công'));
     } finally {
       setIsSubmitting(false);
     }
@@ -278,6 +281,11 @@ export const CashflowView: React.FC<CashflowViewProps> = ({
             </div>
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+              {formError && (
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                  {formError}
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-medium text-zinc-300 mb-1">Danh mục</label>
                 <select
